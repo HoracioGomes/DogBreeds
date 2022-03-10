@@ -1,8 +1,10 @@
-package com.example.dogbreedsapp;
+package com.example.dogbreedsapp.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.example.dogbreedsapp.R;
 
 public class MainActivity extends AppCompatActivity {
 
