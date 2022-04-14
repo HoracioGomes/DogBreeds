@@ -22,8 +22,8 @@ public class ListViewModel extends AndroidViewModel {
 
     public void refresh() {
         DogBreed dog1 = new DogBreed("1", "Pincher", "12", "", "", "", "");
-        DogBreed dog2 = new DogBreed("1", "Pitbull", "12", "", "", "", "");
-        DogBreed dog3 = new DogBreed("1", "Fila", "10", "", "", "", "");
+        DogBreed dog2 = new DogBreed("2", "Pitbull", "12", "", "", "", "");
+        DogBreed dog3 = new DogBreed("3", "Fila", "10", "", "", "", "");
 
         ArrayList<DogBreed> dogList = new ArrayList<DogBreed>();
         dogList.add(dog1);
