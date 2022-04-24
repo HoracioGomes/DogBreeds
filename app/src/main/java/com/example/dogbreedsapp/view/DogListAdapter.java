@@ -41,11 +41,14 @@ public class DogListAdapter extends RecyclerView.Adapter<DogListAdapter.DogViewH
         TextView name = holder.itemView.findViewById(R.id.tv_dog_name_card_dog);
         TextView lifeSpan = holder.itemView.findViewById(R.id.tv_dog_lifespan_card_dog);
 
+        name.setText(dogList.get(position).dogBreed);
+        lifeSpan.setText(dogList.get(position).lifeSpan);
+
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return dogList.size();
     }
 
     class DogViewHolder extends RecyclerView.ViewHolder {
