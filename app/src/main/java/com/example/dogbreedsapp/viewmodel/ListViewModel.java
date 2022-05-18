@@ -40,9 +40,7 @@ public class ListViewModel extends AndroidViewModel {
                         .subscribeWith(new DisposableSingleObserver<List<DogBreed>>() {
                             @Override
                             public void onSuccess(@NonNull List<DogBreed> dogBreeds) {
-                                dogs.setValue(dogBreeds);
-                                dogLoadError.setValue(false);
-                                loading.setValue(false);
+                                afterGetApi(dogBreeds);
                             }
 
                             @Override
@@ -56,6 +54,12 @@ public class ListViewModel extends AndroidViewModel {
 
         );
 
+    }
+
+    private void afterGetApi(@NonNull List<DogBreed> dogBreeds) {
+        dogs.setValue(dogBreeds);
+        dogLoadError.setValue(false);
+        loading.setValue(false);
     }
 
     @Override
