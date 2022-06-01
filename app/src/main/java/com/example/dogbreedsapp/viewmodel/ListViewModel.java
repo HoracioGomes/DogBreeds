@@ -1,11 +1,16 @@
 package com.example.dogbreedsapp.viewmodel;
 
 import android.app.Application;
+import android.os.AsyncTask;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.dogbreedsapp.asynctask.InsertDogsAsyncTask;
+import com.example.dogbreedsapp.asynctask.RetrieveStorageDogBreedAsyncTask;
+import com.example.dogbreedsapp.asynctask.listeners.ListenerPosStorageDogBreeds;
+import com.example.dogbreedsapp.asynctask.listeners.ListenerStorageRetrievedDogBreed;
 import com.example.dogbreedsapp.model.DogBreed;
 import com.example.dogbreedsapp.retrofit.DogsService;
 
@@ -22,6 +27,8 @@ public class ListViewModel extends AndroidViewModel {
     public MutableLiveData<Boolean> loading = new MutableLiveData<Boolean>();
     private DogsService dogsService = new DogsService();
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private AsyncTask<List<DogBreed>, Void, List<DogBreed>> insertDogsAsyncTask;
+    private AsyncTask<Void, Void, List<DogBreed>> retrieveDogListAsyncTask;
 
     public ListViewModel(@NonNull Application application) {
         super(application);
@@ -57,14 +64,25 @@ public class ListViewModel extends AndroidViewModel {
     }
 
     private void afterGetApi(@NonNull List<DogBreed> dogBreeds) {
-        dogs.setValue(dogBreeds);
-        dogLoadError.setValue(false);
-        loading.setValue(false);
+        insertDogsAsyncTask = new InsertDogsAsyncTask(getApplication(), () -> retrieveDbDogList()).execute(dogBreeds);
+
+    }
+
+    private void retrieveDbDogList() {
+        retrieveDogListAsyncTask = new RetrieveStorageDogBreedAsyncTask(getApplication(), retrievedList -> {
+            dogs.setValue(retrievedList);
+            dogLoadError.setValue(false);
+            loading.setValue(false);
+        }).execute();
     }
 
     @Override
     protected void onCleared() {
         super.onCleared();
         compositeDisposable.clear();
+        if (insertDogsAsyncTask != null) {
+            insertDogsAsyncTask.cancel(true);
+            insertDogsAsyncTask = null;
+        }
     }
 }

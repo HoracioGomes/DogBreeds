@@ -11,7 +11,7 @@ import java.util.List;
 @Dao
 public interface DogBreedDao {
     @Insert
-    List<Integer> insertAll(DogBreed... dogBreeds);
+    List<Long> insertAll(DogBreed... dogBreeds);
 
     @Query("SELECT * FROM dogbreed")
     List<DogBreed> getAll();
