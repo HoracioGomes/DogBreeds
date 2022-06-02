@@ -35,10 +35,10 @@ public class ListViewModel extends AndroidViewModel {
     }
 
     public void refresh() {
-        getFromRemote();
+        retrieveDbDogList();
     }
 
-    private void getFromRemote() {
+    public void getFromRemote() {
         loading.setValue(true);
         compositeDisposable.add(
                 dogsService.getDogBreeds()
@@ -48,6 +48,7 @@ public class ListViewModel extends AndroidViewModel {
                             @Override
                             public void onSuccess(@NonNull List<DogBreed> dogBreeds) {
                                 afterGetApi(dogBreeds);
+                                retrieveDbDogList();
                             }
 
                             @Override
@@ -68,7 +69,7 @@ public class ListViewModel extends AndroidViewModel {
 
     }
 
-    private void retrieveDbDogList() {
+    public void retrieveDbDogList() {
         retrieveDogListAsyncTask = new RetrieveStorageDogBreedAsyncTask(getApplication(), retrievedList -> {
             dogs.setValue(retrievedList);
             dogLoadError.setValue(false);
@@ -83,6 +84,11 @@ public class ListViewModel extends AndroidViewModel {
         if (insertDogsAsyncTask != null) {
             insertDogsAsyncTask.cancel(true);
             insertDogsAsyncTask = null;
+        }
+
+        if (retrieveDogListAsyncTask != null) {
+            retrieveDogListAsyncTask.cancel(true);
+            retrieveDogListAsyncTask = null;
         }
     }
 }
