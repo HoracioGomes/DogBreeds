@@ -14,7 +14,7 @@ public class SharedPreferencesHelper {
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
-    public SharedPreferencesHelper getInstance(Context context) {
+    public static SharedPreferencesHelper getInstance(Context context) {
         if (instance == null) {
             instance = new SharedPreferencesHelper(context);
         }

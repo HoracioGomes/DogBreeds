@@ -10,9 +10,9 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.dogbreedsapp.asynctask.InsertDogsAsyncTask;
 import com.example.dogbreedsapp.asynctask.RetrieveStorageDogBreedAsyncTask;
 import com.example.dogbreedsapp.asynctask.listeners.ListenerPosStorageDogBreeds;
-import com.example.dogbreedsapp.asynctask.listeners.ListenerStorageRetrievedDogBreed;
 import com.example.dogbreedsapp.model.DogBreed;
 import com.example.dogbreedsapp.retrofit.DogsService;
+import com.example.dogbreedsapp.util.SharedPreferencesHelper;
 
 import java.util.List;
 
@@ -29,13 +29,25 @@ public class ListViewModel extends AndroidViewModel {
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private AsyncTask<List<DogBreed>, Void, List<DogBreed>> insertDogsAsyncTask;
     private AsyncTask<Void, Void, List<DogBreed>> retrieveDogListAsyncTask;
+    private SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper.getInstance(getApplication());
+    private long refreshTime = createRefreshTime();
+
+    private long createRefreshTime() {
+        return 5 * 60 * 1000 * 1000 * 1000L;
+    }
 
     public ListViewModel(@NonNull Application application) {
         super(application);
     }
 
     public void refresh() {
-        retrieveDbDogList();
+        long updatedTime = preferencesHelper.getUpdatedTime();
+        long currentTime = System.nanoTime();
+        if (updatedTime != 0 && currentTime - updatedTime < refreshTime) {
+            retrieveDbDogList();
+        } else {
+            getFromRemote();
+        }
     }
 
     public void getFromRemote() {
@@ -48,7 +60,6 @@ public class ListViewModel extends AndroidViewModel {
                             @Override
                             public void onSuccess(@NonNull List<DogBreed> dogBreeds) {
                                 afterGetApi(dogBreeds);
-                                retrieveDbDogList();
                             }
 
                             @Override
@@ -65,7 +76,10 @@ public class ListViewModel extends AndroidViewModel {
     }
 
     private void afterGetApi(@NonNull List<DogBreed> dogBreeds) {
-        insertDogsAsyncTask = new InsertDogsAsyncTask(getApplication(), () -> retrieveDbDogList()).execute(dogBreeds);
+        insertDogsAsyncTask = new InsertDogsAsyncTask(getApplication(), () -> {
+            preferencesHelper.saveUpdateTime(System.nanoTime());
+            retrieveDbDogList();
+        }).execute(dogBreeds);
 
     }
 

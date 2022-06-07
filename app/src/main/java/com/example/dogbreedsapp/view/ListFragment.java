@@ -62,7 +62,7 @@ public class ListFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
         observeViewModel();
-        listViewModel.getFromRemote();
+        listViewModel.refresh();
     }
 
     private void observeViewModel() {
