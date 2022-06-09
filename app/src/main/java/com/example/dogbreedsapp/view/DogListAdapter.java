@@ -4,9 +4,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dogbreedsapp.R;
@@ -41,10 +43,18 @@ public class DogListAdapter extends RecyclerView.Adapter<DogListAdapter.DogViewH
         ImageView imageDog = holder.itemView.findViewById(R.id.iv_card_dog);
         TextView name = holder.itemView.findViewById(R.id.tv_dog_name_card_dog);
         TextView lifeSpan = holder.itemView.findViewById(R.id.tv_dog_lifespan_card_dog);
+        LinearLayout llCardDog = holder.itemView.findViewById(R.id.linearlayout_card_dog);
 
         name.setText(dogList.get(position).dogBreed);
         lifeSpan.setText(dogList.get(position).lifeSpan);
         Util.loadImage(imageDog, dogList.get(position).imageUrl, Util.getProgressdrawable(imageDog.getContext()));
+
+        llCardDog.setOnClickListener(view -> {
+            ListFragmentDirections.ActionListFragmentToDetailFragment action
+                    = ListFragmentDirections.actionListFragmentToDetailFragment(dogList.get(position).uuid);
+
+            Navigation.findNavController(llCardDog).navigate(action);
+        });
 
     }
 
