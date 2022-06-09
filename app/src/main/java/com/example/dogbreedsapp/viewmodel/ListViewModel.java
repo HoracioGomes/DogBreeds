@@ -9,7 +9,6 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.dogbreedsapp.asynctask.InsertDogsAsyncTask;
 import com.example.dogbreedsapp.asynctask.RetrieveStorageDogBreedAsyncTask;
-import com.example.dogbreedsapp.asynctask.listeners.ListenerPosStorageDogBreeds;
 import com.example.dogbreedsapp.model.DogBreed;
 import com.example.dogbreedsapp.retrofit.DogsService;
 import com.example.dogbreedsapp.util.SharedPreferencesHelper;
@@ -40,14 +39,18 @@ public class ListViewModel extends AndroidViewModel {
         super(application);
     }
 
-    public void refresh() {
+    public void mainRefresh() {
         long updatedTime = preferencesHelper.getUpdatedTime();
         long currentTime = System.nanoTime();
         if (updatedTime != 0 && currentTime - updatedTime < refreshTime) {
-            retrieveDbDogList();
+            getFromStorage();
         } else {
             getFromRemote();
         }
+    }
+
+    public void remoteRefresh() {
+        getFromRemote();
     }
 
     public void getFromRemote() {
@@ -78,12 +81,12 @@ public class ListViewModel extends AndroidViewModel {
     private void afterGetApi(@NonNull List<DogBreed> dogBreeds) {
         insertDogsAsyncTask = new InsertDogsAsyncTask(getApplication(), () -> {
             preferencesHelper.saveUpdateTime(System.nanoTime());
-            retrieveDbDogList();
+            getFromStorage();
         }).execute(dogBreeds);
 
     }
 
-    public void retrieveDbDogList() {
+    public void getFromStorage() {
         retrieveDogListAsyncTask = new RetrieveStorageDogBreedAsyncTask(getApplication(), retrievedList -> {
             dogs.setValue(retrievedList);
             dogLoadError.setValue(false);

@@ -12,9 +12,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.navigation.NavController;
-import androidx.navigation.NavDirections;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -62,7 +59,15 @@ public class ListFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
         observeViewModel();
-        listViewModel.refresh();
+        listViewModel.mainRefresh();
+        configRefreshLayout();
+    }
+
+    private void configRefreshLayout() {
+        refreshLayout.setOnRefreshListener(() -> {
+            listViewModel.remoteRefresh();
+            refreshLayout.setRefreshing(false);
+        });
     }
 
     private void observeViewModel() {
