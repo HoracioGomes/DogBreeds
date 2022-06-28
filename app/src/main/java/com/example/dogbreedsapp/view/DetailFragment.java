@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,6 +15,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.dogbreedsapp.R;
 import com.example.dogbreedsapp.model.DogBreed;
+import com.example.dogbreedsapp.util.Util;
 import com.example.dogbreedsapp.viewmodel.DetailViewModel;
 
 import butterknife.BindView;
@@ -31,6 +33,8 @@ public class DetailFragment extends Fragment {
     TextView dogTemperament;
     @BindView(R.id.tv_dog_lifespan_details)
     TextView dogLifespan;
+    @BindView(R.id.iv_dog_details)
+    ImageView dogCircularImage;
 
     public DetailFragment() {
     }
@@ -49,11 +53,11 @@ public class DetailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         detailViewModel = ViewModelProviders.of(this).get(DetailViewModel.class);
+        initObserver();
         if (getArguments() != null) {
             dogUuid = DetailFragmentArgs.fromBundle(getArguments()).getDogUuid();
+            detailViewModel.fetch(dogUuid);
         }
-        initObserver();
-        detailViewModel.refresh();
 
     }
 
@@ -65,6 +69,7 @@ public class DetailFragment extends Fragment {
                 dogTemperament.setText(dogBreed.temperament);
                 dogLifespan.setText(dogBreed.lifeSpan);
                 dogPurpose.setText(dogBreed.bredFor);
+                Util.loadImage(dogCircularImage,dogBreed.imageUrl,null);
             }
         });
     }
