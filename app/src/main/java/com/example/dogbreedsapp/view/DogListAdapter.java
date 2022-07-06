@@ -8,10 +8,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dogbreedsapp.R;
+import com.example.dogbreedsapp.databinding.CardDogBinding;
 import com.example.dogbreedsapp.model.DogBreed;
 import com.example.dogbreedsapp.util.Util;
 
@@ -34,27 +36,30 @@ public class DogListAdapter extends RecyclerView.Adapter<DogListAdapter.DogViewH
     @NonNull
     @Override
     public DogViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_dog, parent, false);
-        return new DogViewHolder(view);
+        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+        CardDogBinding cardDogBinding = DataBindingUtil.inflate(layoutInflater, R.layout.card_dog, parent, false);
+        return new DogViewHolder(cardDogBinding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull DogViewHolder holder, int position) {
-        ImageView imageDog = holder.itemView.findViewById(R.id.iv_card_dog);
-        TextView name = holder.itemView.findViewById(R.id.tv_dog_name_card_dog);
-        TextView lifeSpan = holder.itemView.findViewById(R.id.tv_dog_lifespan_card_dog);
-        LinearLayout llCardDog = holder.itemView.findViewById(R.id.linearlayout_card_dog);
+//        ImageView imageDog = holder.itemView.findViewById(R.id.iv_card_dog);
+//        TextView name = holder.itemView.findViewById(R.id.tv_dog_name_card_dog);
+//        TextView lifeSpan = holder.     itemView.findViewById(R.id.tv_dog_lifespan_card_dog);
+//        LinearLayout llCardDog = holder.itemView.findViewById(R.id.linearlayout_card_dog);
+//
+//        name.setText(dogList.get(position).dogBreed);
+//        lifeSpan.setText(dogList.get(position).lifeSpan);
+//        Util.loadImage(imageDog, dogList.get(position).imageUrl, Util.getProgressdrawable(imageDog.getContext()));
+//
+//        llCardDog.setOnClickListener(view -> {
+//            ListFragmentDirections.ActionListFragmentToDetailFragment action
+//                    = ListFragmentDirections.actionListFragmentToDetailFragment(dogList.get(position).uuid);
+//
+//            Navigation.findNavController(llCardDog).navigate(action);
+//        });
 
-        name.setText(dogList.get(position).dogBreed);
-        lifeSpan.setText(dogList.get(position).lifeSpan);
-        Util.loadImage(imageDog, dogList.get(position).imageUrl, Util.getProgressdrawable(imageDog.getContext()));
-
-        llCardDog.setOnClickListener(view -> {
-            ListFragmentDirections.ActionListFragmentToDetailFragment action
-                    = ListFragmentDirections.actionListFragmentToDetailFragment(dogList.get(position).uuid);
-
-            Navigation.findNavController(llCardDog).navigate(action);
-        });
+        holder.itemView.setDogBreed(dogList.get(position));
 
     }
 
@@ -64,10 +69,10 @@ public class DogListAdapter extends RecyclerView.Adapter<DogListAdapter.DogViewH
     }
 
     class DogViewHolder extends RecyclerView.ViewHolder {
-        public View itemView;
+        public CardDogBinding itemView;
 
-        public DogViewHolder(@NonNull View itemView) {
-            super(itemView);
+        public DogViewHolder(@NonNull CardDogBinding itemView) {
+            super(itemView.getRoot());
             this.itemView = itemView;
         }
     }
