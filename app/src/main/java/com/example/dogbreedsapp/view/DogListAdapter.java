@@ -20,7 +20,7 @@ import com.example.dogbreedsapp.util.Util;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DogListAdapter extends RecyclerView.Adapter<DogListAdapter.DogViewHolder> {
+public class DogListAdapter extends RecyclerView.Adapter<DogListAdapter.DogViewHolder> implements DogClickListener {
     private ArrayList<DogBreed> dogList;
 
     public DogListAdapter(ArrayList<DogBreed> dogList) {
@@ -43,24 +43,16 @@ public class DogListAdapter extends RecyclerView.Adapter<DogListAdapter.DogViewH
 
     @Override
     public void onBindViewHolder(@NonNull DogViewHolder holder, int position) {
-//        ImageView imageDog = holder.itemView.findViewById(R.id.iv_card_dog);
-//        TextView name = holder.itemView.findViewById(R.id.tv_dog_name_card_dog);
-//        TextView lifeSpan = holder.     itemView.findViewById(R.id.tv_dog_lifespan_card_dog);
-//        LinearLayout llCardDog = holder.itemView.findViewById(R.id.linearlayout_card_dog);
-//
-//        name.setText(dogList.get(position).dogBreed);
-//        lifeSpan.setText(dogList.get(position).lifeSpan);
-//        Util.loadImage(imageDog, dogList.get(position).imageUrl, Util.getProgressdrawable(imageDog.getContext()));
-//
-//        llCardDog.setOnClickListener(view -> {
-//            ListFragmentDirections.ActionListFragmentToDetailFragment action
-//                    = ListFragmentDirections.actionListFragmentToDetailFragment(dogList.get(position).uuid);
-//
-//            Navigation.findNavController(llCardDog).navigate(action);
-//        });
-
         holder.itemView.setDogBreed(dogList.get(position));
+        holder.itemView.setListener(this::onClickListener);
+    }
 
+    @Override
+    public void onClickListener(View view) {
+        String stringUuid = ((TextView) view.findViewById(R.id.dogUuid)).getText().toString();
+        int uuid = Integer.valueOf(stringUuid);
+        ListFragmentDirections.ActionListFragmentToDetailFragment action = ListFragmentDirections.actionListFragmentToDetailFragment(uuid);
+        Navigation.findNavController(view).navigate(action);
     }
 
     @Override

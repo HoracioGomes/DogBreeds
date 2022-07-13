@@ -5,13 +5,25 @@
         <variable
             name="dogBreed"
             type="com.example.dogbreedsapp.model.DogBreed" />
+        <variable
+            name="listener"
+            type="com.example.dogbreedsapp.view.DogClickListener" />
     </data>
 
     <LinearLayout
         android:id="@+id/linearlayout_card_dog"
         android:layout_width="match_parent"
         android:layout_height="125dp"
+        android:onClick="@{listener::onClickListener}"
         android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/dogUuid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{String.valueOf(dogBreed.uuid)}"
+            android:visibility="gone"
+            />
 
         <ImageView
             android:id="@+id/iv_card_dog"
