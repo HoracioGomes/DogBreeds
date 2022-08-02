@@ -9,11 +9,13 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.dogbreedsapp.R;
+import com.example.dogbreedsapp.databinding.FragmentDetailBinding;
 import com.example.dogbreedsapp.model.DogBreed;
 import com.example.dogbreedsapp.util.Util;
 import com.example.dogbreedsapp.viewmodel.DetailViewModel;
@@ -25,28 +27,30 @@ import butterknife.ButterKnife;
 public class DetailFragment extends Fragment {
     private int dogUuid;
 
-    @BindView(R.id.tv_dog_name_details)
-    TextView dogName;
-    @BindView(R.id.tv_dog_purpose_details)
-    TextView dogPurpose;
-    @BindView(R.id.tv_dog_temperament_details)
-    TextView dogTemperament;
-    @BindView(R.id.tv_dog_lifespan_details)
-    TextView dogLifespan;
-    @BindView(R.id.iv_dog_details)
-    ImageView dogCircularImage;
+//    @BindView(R.id.tv_dog_name_details)
+//    TextView dogName;
+//    @BindView(R.id.tv_dog_purpose_details)
+//    TextView dogPurpose;
+//    @BindView(R.id.tv_dog_temperament_details)
+//    TextView dogTemperament;
+//    @BindView(R.id.tv_dog_lifespan_details)
+//    TextView dogLifespan;
+//    @BindView(R.id.iv_dog_details)
+//    ImageView dogCircularImage;
 
     public DetailFragment() {
     }
 
     private DetailViewModel detailViewModel;
+    private FragmentDetailBinding binding;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_detail, container, false);
-        ButterKnife.bind(this, view);
-        return view;
+
+        binding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.fragment_detail, container, false);
+        return binding.getRoot();
+
     }
 
     @Override
@@ -65,11 +69,14 @@ public class DetailFragment extends Fragment {
         detailViewModel.dogBreedDetail.observe(getViewLifecycleOwner(), new Observer<DogBreed>() {
             @Override
             public void onChanged(DogBreed dogBreed) {
-                dogName.setText(dogBreed.dogBreed);
-                dogTemperament.setText(dogBreed.temperament);
-                dogLifespan.setText(dogBreed.lifeSpan);
-                dogPurpose.setText(dogBreed.bredFor);
-                Util.loadImage(dogCircularImage,dogBreed.imageUrl,null);
+//                dogName.setText(dogBreed.dogBreed);
+//                dogTemperament.setText(dogBreed.temperament);
+//                dogLifespan.setText(dogBreed.lifeSpan);
+//                dogPurpose.setText(dogBreed.bredFor);
+//                Util.loadImage(dogCircularImage,dogBreed.imageUrl,null);
+
+                binding.setDog(dogBreed);
+
             }
         });
     }
