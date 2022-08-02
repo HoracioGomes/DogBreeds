@@ -1,5 +1,7 @@
 package com.example.dogbreedsapp.view;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +15,15 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.palette.graphics.Palette;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.dogbreedsapp.R;
 import com.example.dogbreedsapp.databinding.FragmentDetailBinding;
 import com.example.dogbreedsapp.model.DogBreed;
+import com.example.dogbreedsapp.model.DogPalette;
 import com.example.dogbreedsapp.util.Util;
 import com.example.dogbreedsapp.viewmodel.DetailViewModel;
 
@@ -76,6 +83,31 @@ public class DetailFragment extends Fragment {
 //                Util.loadImage(dogCircularImage,dogBreed.imageUrl,null);
 
                 binding.setDog(dogBreed);
+
+                if (dogBreed.imageUrl != null) {
+                    setupBackgroundColor(dogBreed.imageUrl);
+                }
+
+            }
+        });
+    }
+
+    private void setupBackgroundColor(String url) {
+        Glide.with(this).asBitmap().load(url).into(new CustomTarget<Bitmap>() {
+            @Override
+            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                Palette.from(resource).generate(new Palette.PaletteAsyncListener() {
+                    @Override
+                    public void onGenerated(@Nullable Palette palette) {
+                        int colorPalette = palette.getLightMutedSwatch().getRgb();
+                        DogPalette dogPalette = new DogPalette(colorPalette);
+                        binding.setDogPalette(dogPalette);
+                    }
+                });
+            }
+
+            @Override
+            public void onLoadCleared(@Nullable Drawable placeholder) {
 
             }
         });
