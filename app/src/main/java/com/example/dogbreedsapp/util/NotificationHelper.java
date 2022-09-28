@@ -41,7 +41,7 @@ public class NotificationHelper {
 
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
-        Bitmap icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.dog_icon);
+        Bitmap icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.dog_1);
 
         Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.dog_icon)

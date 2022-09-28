@@ -11,6 +11,7 @@ import com.example.dogbreedsapp.asynctask.InsertDogsAsyncTask;
 import com.example.dogbreedsapp.asynctask.RetrieveStorageDogBreedAsyncTask;
 import com.example.dogbreedsapp.model.DogBreed;
 import com.example.dogbreedsapp.retrofit.DogsService;
+import com.example.dogbreedsapp.util.NotificationHelper;
 import com.example.dogbreedsapp.util.SharedPreferencesHelper;
 
 import java.util.List;
@@ -91,6 +92,7 @@ public class ListViewModel extends AndroidViewModel {
             dogs.setValue(retrievedList);
             dogLoadError.setValue(false);
             loading.setValue(false);
+            NotificationHelper.getInstance(getApplication()).createNotification();
         }).execute();
     }
 
