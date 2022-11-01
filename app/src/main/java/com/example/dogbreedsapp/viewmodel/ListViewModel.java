@@ -41,12 +41,25 @@ public class ListViewModel extends AndroidViewModel {
     }
 
     public void mainRefresh() {
+        checkPrefsRefreshTime();
         long updatedTime = preferencesHelper.getUpdatedTime();
         long currentTime = System.nanoTime();
         if (updatedTime != 0 && currentTime - updatedTime < refreshTime) {
             getFromStorage();
         } else {
             getFromRemote();
+        }
+    }
+
+    private void checkPrefsRefreshTime() {
+        String unformattedRefreshTime = preferencesHelper.getPrefTime();
+        if (!unformattedRefreshTime.equals("")) {
+            try {
+                Long formattedRefreshTime = Long.parseLong(unformattedRefreshTime);
+                refreshTime = formattedRefreshTime * 1000 * 1000 * 1000L;
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -63,6 +76,7 @@ public class ListViewModel extends AndroidViewModel {
                         .subscribeWith(new DisposableSingleObserver<List<DogBreed>>() {
                             @Override
                             public void onSuccess(@NonNull List<DogBreed> dogBreeds) {
+                                NotificationHelper.getInstance(getApplication()).createNotification();
                                 afterGetApi(dogBreeds);
                             }
 
@@ -92,7 +106,6 @@ public class ListViewModel extends AndroidViewModel {
             dogs.setValue(retrievedList);
             dogLoadError.setValue(false);
             loading.setValue(false);
-            NotificationHelper.getInstance(getApplication()).createNotification();
         }).execute();
     }
 

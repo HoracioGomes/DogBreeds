@@ -22,10 +22,14 @@ public class SharedPreferencesHelper {
     }
 
     public void saveUpdateTime(Long time) {
-        prefs.edit().putLong(PREF_TIME, time);
+        prefs.edit().putLong(PREF_TIME, time).apply();
     }
 
     public Long getUpdatedTime() {
         return prefs.getLong(PREF_TIME, 0);
+    }
+
+    public String getPrefTime() {
+        return prefs.getString("pref_cache_duration", "");
     }
 }
