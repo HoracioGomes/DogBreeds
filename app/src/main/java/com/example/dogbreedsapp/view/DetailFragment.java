@@ -4,10 +4,12 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,15 +26,12 @@ import com.example.dogbreedsapp.R;
 import com.example.dogbreedsapp.databinding.FragmentDetailBinding;
 import com.example.dogbreedsapp.model.DogBreed;
 import com.example.dogbreedsapp.model.DogPalette;
-import com.example.dogbreedsapp.util.Util;
 import com.example.dogbreedsapp.viewmodel.DetailViewModel;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 
 public class DetailFragment extends Fragment {
     private int dogUuid;
+    private boolean isSendSms = false;
 
 //    @BindView(R.id.tv_dog_name_details)
 //    TextView dogName;
@@ -56,6 +55,7 @@ public class DetailFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         binding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.fragment_detail, container, false);
+        setHasOptionsMenu(true);
         return binding.getRoot();
 
     }
@@ -113,4 +113,37 @@ public class DetailFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.detail_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case R.id.menu_share:
+                Toast.makeText(getContext(), "Clicou no share!", Toast.LENGTH_SHORT).show();
+                break;
+
+            case R.id.menu_sms:
+
+                if (!isSendSms) {
+                    isSendSms = true;
+                    ((MainActivity) getActivity()).checkSmsPermission();
+                }
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void onPermissionResult(Boolean permissionGranted) {
+        if (permissionGranted) {
+            Toast.makeText(getContext(), "Permitiu envio de sms!", Toast.LENGTH_SHORT).show();
+        }
+        isSendSms = false;
+    }
 }
