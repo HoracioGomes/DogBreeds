@@ -1,6 +1,7 @@
 package com.example.dogbreedsapp.view;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -130,7 +131,13 @@ public class DetailFragment extends Fragment {
         switch (item.getItemId()) {
 
             case R.id.menu_share:
-                Toast.makeText(getContext(), "Clicou no share!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Check");
+                intent.putExtra(Intent.EXTRA_TEXT,currentDog.dogBreed + " Description: " + currentDog.bredFor);
+                intent.putExtra(Intent.EXTRA_STREAM, currentDog.imageUrl);
+                startActivity(Intent.createChooser(intent, "Share With"));
+
                 break;
 
             case R.id.menu_sms:
