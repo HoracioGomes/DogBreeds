@@ -1,5 +1,6 @@
 package com.example.dogbreedsapp.view;
 
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -23,15 +25,18 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.dogbreedsapp.R;
+import com.example.dogbreedsapp.databinding.DialogSmsBinding;
 import com.example.dogbreedsapp.databinding.FragmentDetailBinding;
 import com.example.dogbreedsapp.model.DogBreed;
 import com.example.dogbreedsapp.model.DogPalette;
+import com.example.dogbreedsapp.model.Sms;
 import com.example.dogbreedsapp.viewmodel.DetailViewModel;
 
 
 public class DetailFragment extends Fragment {
     private int dogUuid;
     private boolean isSendSms = false;
+    private DogBreed currentDog;
 
 //    @BindView(R.id.tv_dog_name_details)
 //    TextView dogName;
@@ -81,7 +86,7 @@ public class DetailFragment extends Fragment {
 //                dogLifespan.setText(dogBreed.lifeSpan);
 //                dogPurpose.setText(dogBreed.bredFor);
 //                Util.loadImage(dogCircularImage,dogBreed.imageUrl,null);
-
+                currentDog = dogBreed;
                 binding.setDog(dogBreed);
 
                 if (dogBreed.imageUrl != null) {
@@ -141,9 +146,29 @@ public class DetailFragment extends Fragment {
     }
 
     public void onPermissionResult(Boolean permissionGranted) {
-        if (permissionGranted) {
-            Toast.makeText(getContext(), "Permitiu envio de sms!", Toast.LENGTH_SHORT).show();
+        if (isAdded() && isSendSms && permissionGranted) {
+            Sms smsInfo = new Sms("", currentDog.dogBreed + " Description: " + currentDog.bredFor, currentDog.imageUrl);
+
+            DialogSmsBinding dialogSmsBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_sms, null, false);
+
+            new AlertDialog.Builder(getContext())
+                    .setView(dialogSmsBinding.getRoot())
+                    .setPositiveButton("Send SMS", (dialogInterface, i) -> {
+                        if (!dialogSmsBinding.smsDestination.getText().toString().isEmpty()) {
+                            smsInfo.setTo(dialogSmsBinding.smsDestination.getText().toString());
+                            sendSms(smsInfo);
+                        }
+                    })
+                    .setNegativeButton("Cancel", (dialogInterface, i) -> {
+                    })
+                    .show();
+            isSendSms = false;
+            dialogSmsBinding.setSms(smsInfo);
+
+
         }
-        isSendSms = false;
+    }
+
+    private void sendSms(Sms smsInfo) {
     }
 }
